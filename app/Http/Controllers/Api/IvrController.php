@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Resources\IvrResource;
+use App\Http\Resources\IvrNodeFiltersResource;
+use App\Http\Resources\RouterNodeFilterConditionsResource;
 use App\Ivr\IvrNodesResponse;
+use App\Ivr\IvrNodesfilterResponse;
 use App\Models\Ivr;
 use Illuminate\Http\Request;
 use App\Models\IvrBuilder;
@@ -153,7 +156,6 @@ class IvrController extends ApiController
 
     public function storeTagFilterConditions(Request $request)
     {
-        // return ($request->filters);
         return  $campaignReporting = IvrBuilderFilterConditions::saveTagFilterConditions($request);
         return $this->respond([
             'status' => true,
@@ -162,5 +164,25 @@ class IvrController extends ApiController
                 'filterConditions' => []
             ],
         ]);
+    }
+
+
+    public function getIvrFilterRecord(Request $request)
+    {
+        $request->validate(['ivr_builder_id' => 'required']);
+        $Ivr_builder_filter_conditions = IvrBuilderFilterConditions::with('filter_condition_values', 'tag', 'tag_operator')->where('ivr_builder_id', $request->ivr_builder_id)->get();
+        return $this->respond([
+            'status' => true,
+            'message' => 'Filter Record has been fetched successfully!',
+            'data' => [
+                'filters' => IvrNodeFiltersResource::collection($Ivr_builder_filter_conditions)
+            ],
+        ]);
+    }
+
+    public function getIvrFilterConditions(Request $request)
+    {
+        $IvrNodesResponse = new IvrNodesfilterResponse($request->ivr_builder_uuid);
+        return $IvrNodesResponse->getFilters();
     }
 }

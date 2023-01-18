@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\Api\CampaignReportingController;
+use App\Http\Controllers\Api\IvrController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,3 +32,4 @@ Route::middleware([
 
 Route::get('/wallet-withdraw/{uuid}/{amount}', [WalletController::class, 'withdraw']);
 Route::get('store-campain_results', [CampaignReportingController::class, 'storeCampaignResults']);
+Route::get('get-ivr-filter-conditions', [IvrController::class, 'getIvrFilterConditions']);

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\IvrBuilderFilterConditions;
 
 class IvrBuilder extends Model
 {
@@ -18,6 +19,12 @@ class IvrBuilder extends Model
     {
         return $this->hasMany(self::class, 'parent_id', 'id');
     }
+
+    public function filterConditions()
+    {
+        return $this->hasMany(IvrBuilderFilterConditions::class, 'ivr_builder_id', 'id');
+    }
+
 
     public function ivr()
     {

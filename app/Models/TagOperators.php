@@ -12,7 +12,7 @@ class TagOperators extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'value', 'tag_id '
+        'value', 'tag_id'
     ];
 
     public static function boot()

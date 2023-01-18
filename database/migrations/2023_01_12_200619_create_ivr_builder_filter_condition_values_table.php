@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->string('tag_operator_value')->nullable();
-            $table->foreignId('filter_condition_id')->nullable()->references('id')->on('ivr_builder_filter_conditions')->onDelete('set null');
+            $table->foreignId('filter_condition_id')->nullable()->references('id')->on('ivr_builder_filter_conditions')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

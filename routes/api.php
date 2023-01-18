@@ -482,6 +482,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('duplicate-ivr', [IvrController::class, 'duplicateIvr']);
     Route::delete('delete-ivr', [IvrController::class, 'deleteIvr']);
     Route::get('get-ivr', [IvrController::class, 'getIvr']);
+    Route::get('get-ivr-filter-record', [IvrController::class, 'getIvrFilterRecord']);
 
 
     //ivr builder filter considions API's
