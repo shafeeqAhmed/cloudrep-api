@@ -1,0 +1,61 @@
+{
+    "name": "Test Twilio Workspace",
+    "event_callback": "https://backend.cloudrep.ai/api/twilio_webhook",
+    "workers": [
+        {
+            "name": "Bob",
+            "attributes": {
+                "products": [
+                    "ProgrammableSMS"
+                ],
+                "contact_uri": "+18735030331"
+            }
+        },
+        {
+            "name": "Alice",
+            "attributes": {
+                "products": [
+                    "ProgrammableVoice"
+                ],
+                "contact_uri": "+16725721405"
+            }
+        }
+    ],
+    "activities": [
+        {
+            "name": "Offline",
+            "availability": "false"
+        },
+        {
+            "name": "Idle",
+            "availability": "true"
+        },
+        {
+            "name": "Busy",
+            "availability": "false"
+        },
+        {
+            "name": "Reserved",
+            "availability": "false"
+        }
+    ],
+    "task_queues": [
+        {
+            "name": "Default",
+            "targetWorkers": "1==1"
+        },
+        {
+            "name": "SMS",
+            "targetWorkers": "products HAS \"ProgrammableSMS\""
+        },
+        {
+            "name": "Voice",
+            "targetWorkers": "products HAS \"ProgrammableVoice\""
+        }
+    ],
+    "workflow": {
+        "name": "Sales",
+        "callback": "host=https://backend.cloudrep.ai/webhook/assignment",
+        "timeout": "15"
+    }
+}
