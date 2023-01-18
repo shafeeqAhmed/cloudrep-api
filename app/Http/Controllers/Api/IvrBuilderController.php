@@ -763,7 +763,7 @@ class IvrBuilderController extends ApiController
     {
         return (new Reporting())->storeCampaignResults();
     }
-    public function reorderGatherFilters(Request $request)
+    public function reorderRouterFilters(Request $request)
     {
         $request->validate([
             'filters' => 'required|array',

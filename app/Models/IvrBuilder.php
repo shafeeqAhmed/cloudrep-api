@@ -100,8 +100,8 @@ class IvrBuilder extends Model
 
     public function routerNodeFilters()
     {
-        return $this->hasMany(self::class, 'parent_id', 'id')->where('node_type', 'filter');
-        // ->orderBy('priority', 'desc');
+        return $this->hasMany(self::class, 'parent_id', 'id')->where('node_type', 'filter')
+            ->orderBy('priority', 'asc');
     }
     public function filterChild()
     {

@@ -492,7 +492,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::post('register-node', [IvrBuilderController::class, 'registerNode']);
     Route::post('remove-node', [IvrBuilderController::class, 'removeNode']);
-    Route::post('reorder-gather-filters', [IvrBuilderController::class, 'reorderGatherFilters']);
+    Route::post('reorder-router-filters', [IvrBuilderController::class, 'reorderRouterFilters']);
 
 
     Route::post('upload-app-logo', [FileController::class, 'uploadAppLogo']);
