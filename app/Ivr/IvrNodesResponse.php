@@ -88,6 +88,15 @@ class IvrNodesResponse
         $this->node['type'] = $type;
         $this->node['parent_type'] = $parent;
     }
+    private function getParentFillterUuid()
+    {
+        if ($this->record->parent_filter_id) {
+            $parentRecord = $this->nodes->where('id', $this->record->parent_filter_id)->first();
+            return $parentRecord->uuid;
+        } else {
+            return null;
+        }
+    }
     private function updateNode($type)
     {
         $this->getParentNode();
@@ -101,6 +110,7 @@ class IvrNodesResponse
         $this->node['data'] = $this->getData();
         $this->node['destinationNodeId'] = $type == 'goto' ? $this->getUuidById($this->record->goto_node) : "";
         $this->node['gotoSourceNodeId'] = json_decode($this->record->goto_source_node_uuid);
+        $this->node['parent_fillter_uuid'] = $this->getParentFillterUuid();
         array_push($this->nodeList, $this->node);
     }
 
