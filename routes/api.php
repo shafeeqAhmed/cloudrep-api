@@ -573,3 +573,4 @@ Route::post(
 // Route::post('create-pixel', [IvrBuilderController::class, 'createPixel']);
 // Route::post('create-goto', [IvrBuilderController::class, 'createGoto']);
 //just for new build
+Route::get('get-ivr-filter-conditions-api', [IvrController::class, 'getIvrFilterConditions']);

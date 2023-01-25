@@ -226,6 +226,9 @@ class IverGenerator
     }
     public function router()
     {
+        $IvrNodesResponse = new IvrNodesfilterResponse($this->record->id);
+        $filters = $IvrNodesResponse->getFilters();
+        dd($filters);
     }
     public function successOrFail()
     {

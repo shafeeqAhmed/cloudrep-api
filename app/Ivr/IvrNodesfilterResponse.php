@@ -36,7 +36,7 @@ class IvrNodesfilterResponse
             $filters_arr[$index]['filter_conditions'] = $this->getFilterConditions($record->filterConditions);
         }
 
-       return $this->response = $filters_arr;
+        return $this->response = $filters_arr;
     }
 
 
