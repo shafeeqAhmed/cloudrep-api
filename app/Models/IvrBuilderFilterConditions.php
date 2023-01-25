@@ -10,6 +10,7 @@ use App\Models\Campaign;
 use App\Models\TagOperators;
 use App\Models\Tags;
 use App\Models\IvrBuilderFilterConditionValues;
+use App\Models\IvrBuilder;
 
 class IvrBuilderFilterConditions extends Model
 {
@@ -34,7 +35,8 @@ class IvrBuilderFilterConditions extends Model
         $filter_condition_values = array();
         $count = 0;
 
-        $ivr_builder_id = $request->ivr_builder_id;
+        $ivr_builder_id = IvrBuilder::getIdByUuid($request->ivr_builder_uuid);
+
         $ivr_builder_filter_conditions = self::where('ivr_builder_id', $ivr_builder_id);
         if ($ivr_builder_filter_conditions->count() > 0) {
             $ivr_builder_filter_conditions->delete();

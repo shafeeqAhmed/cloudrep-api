@@ -169,8 +169,9 @@ class IvrController extends ApiController
 
     public function getIvrFilterRecord(Request $request)
     {
-        $request->validate(['ivr_builder_id' => 'required']);
-        $Ivr_builder_filter_conditions = IvrBuilderFilterConditions::with('filter_condition_values', 'tag', 'tag_operator')->where('ivr_builder_id', $request->ivr_builder_id)->get();
+        $request->validate(['ivr_builder_uuid' => 'required']);
+        $ivr_builder_id = IvrBuilder::getIdByUuid($request->ivr_builder_uuid);
+        $Ivr_builder_filter_conditions = IvrBuilderFilterConditions::with('filter_condition_values', 'tag', 'tag_operator')->where('ivr_builder_id', $ivr_builder_id)->get();
         return $this->respond([
             'status' => true,
             'message' => 'Filter Record has been fetched successfully!',
