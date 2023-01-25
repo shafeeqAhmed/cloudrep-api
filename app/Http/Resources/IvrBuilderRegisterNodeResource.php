@@ -18,6 +18,7 @@ class IvrBuilderRegisterNodeResource extends JsonResource
         return [
             'uuid' => $this->resource->uuid,
             'parent_uuid' => $request->parent_uuid,
+            'parent_fillter_uuid' => $this->getParentFillterUuid(),
             'node_type' => $this->resource->node_type,
             'parent_type' => $this->resource->parent_type,
             'type' => $this->getType(),
@@ -38,6 +39,14 @@ class IvrBuilderRegisterNodeResource extends JsonResource
             return $this->resource->nodeParentFilter->priority;
         } else {
             return $this->resource->type;
+        }
+    }
+    private function getParentFillterUuid()
+    {
+        if ($this->resource->nodeParentFilter) {
+            return $this->resource->nodeParentFilter->uuid;
+        } else {
+            return null;
         }
     }
 }

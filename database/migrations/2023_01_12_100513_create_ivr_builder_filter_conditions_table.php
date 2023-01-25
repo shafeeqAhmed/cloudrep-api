@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->integer('campaign_id')->nullable();
-            $table->integer('ivr_builder_id')->nullable();
+            $table->string('ivr_builder_id')->nullable();
             $table->integer('tag_id')->default(0);
             $table->integer('tag_operator_id')->default(0);
             $table->string('type')->nullable();
