@@ -12,4 +12,9 @@ class States extends Model
         'code',
         'name',
     ];
+
+    public static function getCodeByName($name)
+    {
+        return self::where('name', $name)->value('code');
+    }
 }

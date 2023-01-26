@@ -11,6 +11,7 @@ use App\Models\TagOperators;
 use App\Models\Tags;
 use App\Models\IvrBuilderFilterConditionValues;
 use App\Models\IvrBuilder;
+use App\Models\States;
 
 class IvrBuilderFilterConditions extends Model
 {
@@ -69,6 +70,7 @@ class IvrBuilderFilterConditions extends Model
                 foreach ($record['tag_operator_value'] as $index => $value) {
                     $filter_condition_values[$count]['filter_condition_id'] = $result->id;
                     $filter_condition_values[$count]['tag_operator_value'] = $value;
+                    $filter_condition_values[$count]['tag_operator_code'] =   States::getCodeByName($value);
                     $count++;
                 }
             }
