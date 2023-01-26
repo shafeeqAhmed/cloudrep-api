@@ -5,7 +5,7 @@ namespace App\Ivr;
 use App\Models\IvrBuilder;
 use App\Http\Resources\RouterNodeFilterResource;
 
-class IvrNodesfilterResponse
+class IvrNodesfilter
 {
 
     private $response;
@@ -13,13 +13,13 @@ class IvrNodesfilterResponse
     private $record;
     private $filter_conditions;
     private $ivrBuilder;
-    private $ivr_builder_uuid;
+    private $ivr_builder_id;
     private $ivr;
 
 
-    public function __construct($ivr_builder_uuid)
+    public function __construct($ivr_builder_id)
     {
-        $this->ivr_builder_uuid = $ivr_builder_uuid;
+        $this->ivr_builder_id = $ivr_builder_id;
         $this->ivrBuilder = new IvrBuilder();
     }
 
@@ -27,8 +27,9 @@ class IvrNodesfilterResponse
     public function getFilters()
     {
 
-        $ivr_builder_id = IvrBuilder::getIdByUuid($this->ivr_builder_uuid);
-        $router_childs = $this->ivrBuilder->with(['filterConditions.filter_condition_values', 'filterConditions.tag', 'filterConditions.tag_operator'])->where([['parent_id', $ivr_builder_id], ['node_type', 'filter']])->get();
+        $router_childs = $this->ivrBuilder
+            ->with(['filterConditions.filter_condition_values', 'filterConditions.tag', 'filterConditions.tag_operator'])
+            ->where([['parent_id', $this->ivr_builder_id], ['node_type', 'filter']])->get();
         $filters_arr = array();
         foreach ($router_childs as $index => $record) {
 

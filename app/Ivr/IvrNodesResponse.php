@@ -144,7 +144,7 @@ class IvrNodesResponse
     }
     private function router()
     {
-        $this->updateNode('router');
+        // $this->updateNode('router');
     }
 
     private function getFormData($type)
