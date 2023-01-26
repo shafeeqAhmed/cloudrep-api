@@ -8,17 +8,19 @@ use App\Http\Resources\RouterNodeFilterResource;
 class IvrNodesFilter
 {
 
-    private $response;
-
-    private $filter_conditions;
     private $ivrBuilder;
-    private $ivr_builder_id;
+    private $node;
+    private $filters;
+    private $response;
+    private $filter_conditions;
     private $ivr;
+    private $tagType;
+    private $state;
 
 
-    public function __construct($ivr_builder_id)
+    public function __construct($node)
     {
-        $this->ivr_builder_id = $ivr_builder_id;
+        $this->node = $node;
         $this->ivrBuilder = new IvrBuilder();
     }
 
@@ -28,15 +30,15 @@ class IvrNodesFilter
 
         $router_childs = $this->ivrBuilder
             ->with(['filterConditions.filter_condition_values', 'filterConditions.tag', 'filterConditions.tag_operator'])
-            ->where([['parent_id', $this->ivr_builder_id], ['node_type', 'filter']])->get();
+            ->where([['parent_id', $this->node->id], ['node_type', 'filter']])->get();
         $filters_arr = array();
         foreach ($router_childs as $index => $record) {
 
-            $filters_arr[$index]['router_node_uuid'] = $record->uuid;
-            $filters_arr[$index]['filter_conditions'] = $this->getFilterConditions($record->filterConditions);
+            $filters_arr[$index]['node_type'] = $record->node_type;
+            $filters_arr[$index]['conditions'] = $this->getFilterConditions($record->filterConditions);
         }
 
-        return $this->response = $filters_arr;
+        return $filters_arr;
     }
 
 
@@ -45,13 +47,16 @@ class IvrNodesFilter
         $condition_arry = array();
         foreach ($conditions as $index => $condition) {
             $condition_arry[$index]['type'] = $condition['type'];
-            $condition_arry[$index]['tag_operator_uuid'] = $condition->tag_operator->uuid;
-            $condition_arry[$index]['tag_uuid'] = $condition->tag->uuid;
-            $condition_arry[$index]['tag_operator_value'] = $this->getFilterConditionValues($condition->filter_condition_values);
+            $condition_arry[$index]['selected_value_for_tag'] = $condition->tag_value;
+            $condition_arry[$index]['select_operator_for_tag'] = $condition->select_operator_for_tag;
+            $condition_arry[$index]['tag_operator_list'] = $condition->tag_operator->pluck('value');
+            $condition_arry[$index]['tag_operator_value'] = $condition->filter_condition_values->pluck('tag_operator_value');
         }
 
         return $condition_arry;
     }
+
+
 
     public function getFilterConditionValues($condition_values)
     {
@@ -69,5 +74,9 @@ class IvrNodesFilter
         } else {
             return $this->ivrBuilder->where('uuid', $uuid)->value('id');
         }
+    }
+    public function getNextNode()
+    {
+        return  $this->getFilters();
     }
 }

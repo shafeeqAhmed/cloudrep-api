@@ -22,7 +22,10 @@ class IvrBuilder extends Model
 
     public function filterConditions()
     {
-        return $this->hasMany(IvrBuilderFilterConditions::class, 'ivr_builder_id', 'id');
+        return $this->hasMany(IvrBuilderFilterConditions::class, 'ivr_builder_id', 'id')
+            ->join('tag_operators as to', 'to.id', '=', 'ivr_builder_filter_conditions.tag_operator_id')
+            ->join('tags', 'tags.id', '=', 'ivr_builder_filter_conditions.tag_id')
+            ->select('ivr_builder_filter_conditions.*', 'to.value as select_operator_for_tag', 'tags.value as tag_value');
     }
 
 
