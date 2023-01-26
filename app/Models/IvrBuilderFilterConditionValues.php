@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 class IvrBuilderFilterConditionValues extends Model
 {
     use HasFactory;
-    protected $fillable = ['tag_operator_value', 'filter_condition_id'];
+    protected $fillable = ['tag_operator_value', 'tag_operator_code', 'filter_condition_id'];
 
     public static function boot()
     {
