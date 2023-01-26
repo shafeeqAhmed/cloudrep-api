@@ -5,12 +5,11 @@ namespace App\Ivr;
 use App\Models\IvrBuilder;
 use App\Http\Resources\RouterNodeFilterResource;
 
-class IvrNodesfilter
+class IvrNodesFilter
 {
 
     private $response;
 
-    private $record;
     private $filter_conditions;
     private $ivrBuilder;
     private $ivr_builder_id;
