@@ -232,7 +232,11 @@ class IverGenerator
 
         //getNextNode(id)
         $nextNode = $ivrNodeFilter->getNextNode();
-        dd($nextNode);
+        if ($nextNode) {
+            $this->getTwiml($nextNode);
+        } else {
+            $this->directHangupWithMessage('Call did not pass the router node Thanks for calling Good Bye!');
+        }
     }
     public function successOrFail()
     {
