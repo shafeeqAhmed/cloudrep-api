@@ -6,6 +6,7 @@ use App\Classes\Gamification;
 use App\Http\Requests\CampaignRequest;
 use App\Http\Resources\CampaignGeoLocationResource;
 use App\Http\Resources\CampaignResource;
+use App\Http\Resources\IvrNodeFiltersResource;
 use App\Models\BussinesCategory;
 use App\Models\Campaign;
 use App\Models\Currency;
@@ -15,6 +16,7 @@ use App\Models\CampaignReporting;
 use App\Models\CampaignService;
 use App\Models\CampaignVertical;
 use App\Models\CompanyVertical;
+use App\Models\IvrBuilderFilterConditions;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Validation\Rule;
@@ -2791,6 +2793,21 @@ class CompaignController extends APiController
             'message' => 'Currency List has been Fetched  Successfully!',
             'data' => [
                 'currencies' => $currencies
+            ],
+        ]);
+    }
+
+
+    public function getCampaignFilterRecord(Request $request)
+    {
+        $request->validate(['campaign_uuid' => 'required']);
+        $campaign_id = Campaign::getIdByUuid($request->campaign_uuid);
+        $Ivr_builder_filter_conditions = IvrBuilderFilterConditions::with('filter_condition_values', 'tag', 'tag_operator')->where('campaign_id', $campaign_id)->get();
+        return $this->respond([
+            'status' => true,
+            'message' => 'Filter Record has been fetched successfully!',
+            'data' => [
+                'filters' => IvrNodeFiltersResource::collection($Ivr_builder_filter_conditions)
             ],
         ]);
     }

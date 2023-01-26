@@ -15,7 +15,7 @@ use App\Models\IvrBuilder;
 class IvrBuilderFilterConditions extends Model
 {
     use HasFactory;
-    protected $fillable = ['campaign_id', 'ivr_builder_id', 'tag_id', 'tag_operator_id', 'type'];
+    protected $fillable = ['campaign_id', 'ivr_builder_id', 'target_id', 'tag_id', 'tag_operator_id', 'type'];
 
     public static function boot()
     {
@@ -55,11 +55,12 @@ class IvrBuilderFilterConditions extends Model
             $campaign_id = isset($record['campaign_uuid']) ?  Campaign::getIdByUuid($record['campaign_uuid']) : null;
             $tag_id =  isset($record['tag_uuid']) ?  Tags::getIdByUuid($record['tag_uuid']) : null;
             $tag_operator_id = isset($record['tag_operator_uuid']) ?  TagOperators::getIdByUuid($record['tag_operator_uuid']) : null;
-
+            $target_id = isset($record['target_uuid']) ?  TargetListing::getIdByUuid($record['target_uuid']) : null;
             $filter_conditions['type'] = $type;
             $filter_conditions['campaign_id'] = $campaign_id;
             $filter_conditions['ivr_builder_id'] = $ivr_builder_id;
             $filter_conditions['tag_id'] = $tag_id;
+            $filter_conditions['target_id'] = $target_id;
             $filter_conditions['tag_operator_id'] = $tag_operator_id;
 
             $result = self::create($filter_conditions);

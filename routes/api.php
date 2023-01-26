@@ -377,7 +377,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('get-campaigns-completed', [CompaignController::class, 'getCampaignsCompleted']);
     Route::get('get-campaigns-drafted', [CompaignController::class, 'getCampaignsDarfted']);
 
-    // Route::get('get-campaigns-reporting', [CompaignController::class, 'getCampaignsReporting']);
+    Route::get('get-campaign-filter-record', [CompaignController::class, 'getCampaignFilterRecord']);
 
     //Dropdown
     Route::post('store-dropdown-item', [DropDownController::class, 'storeDropdownItem']);
