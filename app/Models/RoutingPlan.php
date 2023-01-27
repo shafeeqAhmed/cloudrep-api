@@ -66,7 +66,7 @@ class RoutingPlan extends Model
                 return $query->where('campaign_id', Campaign::getIdByUuid($campaign_uuid));
             })
             ->orderBy('id', 'DESC')->with(['target' => function ($query) {
-                $query->select('name', 'destination', 'id');
+                $query->select('name', 'destination', 'id', 'uuid');
             }])->paginate($request->perPage);
 
         return $routingPlan;

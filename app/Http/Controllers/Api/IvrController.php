@@ -156,12 +156,8 @@ class IvrController extends ApiController
 
     public function storeTagFilterConditions(Request $request)
     {
-        /*  $tag_id =  isset($request->filters[0]['tag_uuid']) ?  Tags::getIdByUuid($request->filters[0]['tag_uuid']) : null;
-        return $tag_id;
-        // $tag_id =  isset($record['tag_uuid']) ?  Tags::getIdByUuid($record['tag_uuid']) : null;
 
-        // return $tag_id; */
-        $campaignReporting = IvrBuilderFilterConditions::saveTagFilterConditions($request);
+        return  $campaignReporting = IvrBuilderFilterConditions::saveTagFilterConditions($request);
         return $this->respond([
             'status' => true,
             'message' => 'Filtetr Condition has been saved successfully!',
