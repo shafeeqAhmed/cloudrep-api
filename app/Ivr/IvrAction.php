@@ -136,6 +136,10 @@ class IvrAction
     {
         $this->response = $this->ivr->getTwiml($this->record);
     }
+    private function router()
+    {
+        $this->response = $this->ivr->getTwiml($this->record);
+    }
     private function checkGatherDigitsLength()
     {
         $minDigits = $this->record->gather_min_number_of_digits;

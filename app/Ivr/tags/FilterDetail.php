@@ -12,7 +12,7 @@ class FilterDetail
     private $orOpertor;
     public function __construct()
     {
-        $this->value = 'Alabam';
+        $this->value = 'Arizona';
     }
 
     public function isCorrect($conditions)

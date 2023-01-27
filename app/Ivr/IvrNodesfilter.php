@@ -90,7 +90,8 @@ class IvrNodesFilter
             foreach ($filters as $key => $filter) {
                 $isCorrect = $filterDetail->isCorrect($filter['conditions']);
                 // if condition is true
-                if (!$isCorrect) {
+                // if (!$isCorrect) {
+                if ($key == 2) {
                     // find the next tragetted route child
                     $this->nextNode = $filter['node']->filterChild;
                     break;
