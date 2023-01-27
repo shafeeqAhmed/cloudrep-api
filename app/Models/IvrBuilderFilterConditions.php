@@ -36,9 +36,19 @@ class IvrBuilderFilterConditions extends Model
         $filter_condition_values = array();
         $count = 0;
 
-        $ivr_builder_id = IvrBuilder::getIdByUuid($request->ivr_builder_uuid);
+        $campaign_id = isset($request->campaign_uuid) ?  Campaign::getIdByUuid($request->campaign_uuid) : null;
+        $target_id = isset($request->target_uuid) ?  TargetListing::getIdByUuid($request->target_uuid) : null;
 
-        $ivr_builder_filter_conditions = self::where('ivr_builder_id', $ivr_builder_id);
+        $ivr_builder_id = 0;
+
+        if ($request->ivr_builder_uuid != 0) {
+            $ivr_builder_id = IvrBuilder::getIdByUuid($request->ivr_builder_uuid);
+            $ivr_builder_filter_conditions = self::where('ivr_builder_id', $ivr_builder_id);
+        } else {
+            $ivr_builder_filter_conditions = self::where([['campaign_id', $campaign_id], ['target_id', $target_id]]);
+        }
+
+
         if ($ivr_builder_filter_conditions->count() > 0) {
             $ivr_builder_filter_conditions->delete();
         }
@@ -53,10 +63,10 @@ class IvrBuilderFilterConditions extends Model
             $tag_operator_value = $record->tag_operator_value ?? null;*/
 
             $type = $record['type'] ?? null;
-            $campaign_id = isset($record['campaign_uuid']) ?  Campaign::getIdByUuid($record['campaign_uuid']) : null;
+
             $tag_id =  isset($record['tag_uuid']) ?  Tags::getIdByUuid($record['tag_uuid']) : null;
             $tag_operator_id = isset($record['tag_operator_uuid']) ?  TagOperators::getIdByUuid($record['tag_operator_uuid']) : null;
-            $target_id = isset($record['target_uuid']) ?  TargetListing::getIdByUuid($record['target_uuid']) : null;
+
             $filter_conditions['type'] = $type;
             $filter_conditions['campaign_id'] = $campaign_id;
             $filter_conditions['ivr_builder_id'] = $ivr_builder_id;

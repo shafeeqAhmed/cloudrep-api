@@ -14,6 +14,7 @@ use App\Models\CampaignCategory;
 use App\Models\CampaignGeoLocation;
 use App\Models\CampaignReporting;
 use App\Models\CampaignService;
+use App\Models\TargetListing;
 use App\Models\CampaignVertical;
 use App\Models\CompanyVertical;
 use App\Models\IvrBuilderFilterConditions;
@@ -2800,9 +2801,16 @@ class CompaignController extends APiController
 
     public function getCampaignFilterRecord(Request $request)
     {
-        $request->validate(['campaign_uuid' => 'required']);
+        $request->validate(
+            [
+                'campaign_uuid' => 'required',
+                'target_uuid' => 'required'
+            ]
+        );
+
         $campaign_id = Campaign::getIdByUuid($request->campaign_uuid);
-        $Ivr_builder_filter_conditions = IvrBuilderFilterConditions::with('filter_condition_values', 'tag', 'tag_operator')->where('campaign_id', $campaign_id)->get();
+        $target_id = TargetListing::getIdByUuid($request->target_uuid);
+        $Ivr_builder_filter_conditions = IvrBuilderFilterConditions::with('filter_condition_values', 'tag', 'tag_operator')->where([['campaign_id', $campaign_id], ['target_id', $target_id]])->get();
         return $this->respond([
             'status' => true,
             'message' => 'Filter Record has been fetched successfully!',
