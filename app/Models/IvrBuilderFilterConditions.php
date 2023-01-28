@@ -16,7 +16,7 @@ use App\Models\States;
 class IvrBuilderFilterConditions extends Model
 {
     use HasFactory;
-    protected $fillable = ['campaign_id', 'ivr_builder_id', 'target_id', 'tag_id', 'tag_operator_id', 'type'];
+    protected $fillable = ['uuid', 'campaign_id', 'ivr_builder_id', 'target_id', 'tag_id', 'tag_operator_id', 'type'];
 
     public static function boot()
     {

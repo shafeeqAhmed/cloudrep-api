@@ -20,6 +20,7 @@ use App\Ivr\DirectCallFarwarding;
 use App\Services\Reporting;
 use App\Http\Resources\IvrBuilderRegisterNodeResource;
 use App\Models\States;
+use App\Models\IvrBuilderFilterConditions;
 
 class IvrBuilderController extends ApiController
 {
@@ -697,6 +698,16 @@ class IvrBuilderController extends ApiController
             'uuids' => 'required',
         ]);
         $data = $request->all();
+
+
+        $ivr_builder = IvrBuilder::with('filterConditions')->whereIn('uuid', $data['uuids'])->get();
+        if (isset($ivr_builder[0])) {
+            if ($ivr_builder[0]->filterConditions->count() > 0) {
+                  $condition_uuid =   $ivr_builder[0]->filterConditions->pluck('uuid');
+             IvrBuilderFilterConditions::whereIn('uuid', $condition_uuid)->delete();
+            }
+        }
+
         DB::transaction(function () use ($data) {
             IvrBuilder::whereIn('uuid', $data['uuids'])->delete();
         }, 1);
