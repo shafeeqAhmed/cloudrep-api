@@ -530,11 +530,11 @@ class IvrBuilderController extends ApiController
 
     public function ourIvr()
     {
-        $ivrGenerator = new IverGenerator();
-        $ivr = Ivr::first();
+        // $ivrGenerator = new IverGenerator();
+        // $ivr = Ivr::first();
 
-        $record = $ivr->childs->whereNull('parent_id')->first();
-        return $ivrGenerator->getTwiml($record);
+        // $record = $ivr->childs->whereNull('parent_id')->first();
+        // return $ivrGenerator->getTwiml($record);
 
         $detail  = TwillioNumber::getNumberDetails(request('To'));
         $ivrGenerator = new IverGenerator();

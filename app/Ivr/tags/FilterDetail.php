@@ -2,6 +2,7 @@
 
 namespace App\Ivr\Tags;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
 class FilterDetail
@@ -12,25 +13,38 @@ class FilterDetail
     private $orOpertor;
     public function __construct()
     {
-        $this->value = 'Arizona';
+
+        $this->value = request('CallerState');
     }
 
     public function isCorrect($conditions)
     {
+        // dd($this->value, $conditions);
         $conditions = collect($conditions);
+        $andConditions = $conditions->where('type', 'and');
+        $orConditions = $conditions->where('type', 'or');
+        $this->andOperator = $this->testFilterConditions($andConditions);
+        $this->orOpertor =  $this->testFilterConditions($orConditions);
 
-        $this->andOperator = $this->testFilterConditions($conditions->where('type', 'and'));
-        $this->orOpertor =  $this->testFilterConditions($conditions->where('type', 'or'));
-        return $this->andOperator && $this->orOpertor;
+        if ($andConditions->isNotEmpty() && $orConditions->isNotEmpty()) {
+            return $this->andOperator && $this->orOpertor;
+        }
+        if ($andConditions->isNotEmpty()) {
+            return $this->andOperator;
+        }
+        if ($orConditions->isNotEmpty()) {
+            return $this->orOpertor;
+        }
     }
     public function testFilterConditions($conditions)
     {
         foreach ($conditions as $condition) {
-            $this->values = $condition['tag_operator_value'];
+            $this->values = $condition['tag_operator_code'];
             $response = false;
             if (method_exists(self::class, $condition['select_operator_for_tag'])) {
                 $response =  call_user_func_array([$this, $condition['select_operator_for_tag']], []);
             }
+
             return $response;
         }
     }

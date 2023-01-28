@@ -12,12 +12,6 @@ class IvrNodesFilter
     private $ivrBuilder;
     private $node;
     private $nextNode;
-    private $filters;
-    private $response;
-    private $filter_conditions;
-    private $ivr;
-    private $tagType;
-    private $state;
 
 
     public function __construct($node)
@@ -54,23 +48,12 @@ class IvrNodesFilter
             $condition_arry[$index]['selected_value_for_tag'] = $condition->tag_value;
             $condition_arry[$index]['select_operator_for_tag'] = $condition->select_operator_for_tag;
             // $condition_arry[$index]['tag_operator_list'] = $condition->tag_operator->pluck('value');
-            $condition_arry[$index]['tag_operator_value'] = $condition->filter_condition_values->pluck('tag_operator_value');
+            // $condition_arry[$index]['tag_operator_value'] = $condition->filter_condition_values->pluck('tag_operator_value');
+            $condition_arry[$index]['tag_operator_code'] = $condition->filter_condition_values->pluck('tag_operator_code');
         }
 
         return $condition_arry;
     }
-
-
-
-    public function getFilterConditionValues($condition_values)
-    {
-        $condition_values_arr = array();
-        foreach ($condition_values as $index => $value) {
-            $condition_values_arr[$index] = $value['tag_operator_value'];
-        }
-        return $condition_values_arr;
-    }
-
     private function getiIdByUuid($uuid)
     {
         if (is_null($uuid)) {
@@ -90,8 +73,7 @@ class IvrNodesFilter
             foreach ($filters as $key => $filter) {
                 $isCorrect = $filterDetail->isCorrect($filter['conditions']);
                 // if condition is true
-                // if (!$isCorrect) {
-                if ($key == 2) {
+                if ($isCorrect) {
                     // find the next tragetted route child
                     $this->nextNode = $filter['node']->filterChild;
                     break;
