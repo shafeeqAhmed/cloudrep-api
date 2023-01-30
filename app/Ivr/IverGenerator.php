@@ -6,6 +6,7 @@ use App\Models\IvrNodesRetries;
 use App\Models\Routing;
 use Twilio\TwiML\VoiceResponse;
 use App\Ivr\Tags\IvrFilter;
+use App\Ivr\Tags\TargetFilter;
 
 class IverGenerator
 {
@@ -171,12 +172,12 @@ class IverGenerator
     public function getNumber()
     {
         $currentCount = IvrNodesRetries::getCount(request('CallSid'), $this->record->uuid);
+        $targetFilter = new TargetFilter();
+        $result =  $targetFilter->check($this->numbers[$currentCount]['id']);
 
         // dd($currentCount);
-        if ($this->containFilter) {
-            if (true) {
-                // if (false) {
-                dd($this->numbers[$currentCount]);
+        if ($result['containFilter']) {
+            if ($result['isCorrect']) {
                 return $this->numbers[$currentCount]['destination'];
             } else {
                 //move to the next number

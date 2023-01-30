@@ -5,7 +5,7 @@ namespace App\Ivr\Tags;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
-class FilterDetail
+class State
 {
     private $values;
     private $value;

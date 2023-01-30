@@ -72,6 +72,7 @@ class Routing extends Model
             ->join('routings as r', 'r.id', '=', 'routing_plans.routing_id')
             ->join('target_listings as tl', 'tl.id', '=', 'routing_plans.target_id')
             ->select(
+                'tl.id',
                 'routing_plans.uuid',
                 'tl.destination'
             )
@@ -80,7 +81,7 @@ class Routing extends Model
 
         $targets = TargetListing::where('routing_id', $id)
             ->where('status', 'active')
-            ->select('destination', 'uuid')
+            ->select('id', 'uuid', 'destination')
             ->orderBy('is_primary', 'desc')
             ->get();
         // $data['routingPlans'] = $routingPlans;

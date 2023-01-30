@@ -4,7 +4,7 @@ namespace App\Ivr\Tags;
 
 use App\Models\IvrBuilder;
 use App\Http\Resources\RouterNodeFilterResource;
-use App\Ivr\Tags\FilterDetail;
+use App\Ivr\Tags\State;
 
 class IvrFilter
 {
@@ -56,7 +56,7 @@ class IvrFilter
     }
     public function getNextNode()
     {
-        $filterDetail = new FilterDetail();
+        $filterDetail = new State();
         //get all filters against router node
         $filters = $this->getFilters();
         //if router node contain filters
