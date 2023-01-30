@@ -31,6 +31,8 @@ class TargetFilter
     {
         $list = array();
         foreach ($conditions as $index => $condition) {
+            $list[$index]['id'] = $condition['id'];
+            $list[$index]['target_id'] = $condition['target_id'];
             $list[$index]['type'] = $condition['type'];
             $list[$index]['selected_value_for_tag'] = $condition->tag_value;
             $list[$index]['select_operator_for_tag'] = $condition->select_operator_for_tag;
@@ -46,6 +48,7 @@ class TargetFilter
 
         $state = new State();
         $conditions = $this->getFilters($id);
+        // dd($conditions);
         return ['containFilter' => count($conditions) > 0, 'isCorrect' => $state->isCorrect($conditions)];
     }
 }
