@@ -483,7 +483,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('delete-ivr', [IvrController::class, 'deleteIvr']);
     Route::get('get-ivr', [IvrController::class, 'getIvr']);
     Route::get('get-ivr-filter-record', [IvrController::class, 'getIvrFilterRecord']);
-
+    Route::get('get-ivr-routing-target-filter-record', [IvrController::class, 'getIvrRoutingTargetFilterRecord']);
 
     //ivr builder filter considions API's
     Route::get('get-tags', [IvrController::class, 'getTags']);

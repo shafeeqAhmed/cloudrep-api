@@ -44,10 +44,12 @@ class IvrBuilderFilterConditions extends Model
         if ($request->ivr_builder_uuid != 0) {
             $ivr_builder_id = IvrBuilder::getIdByUuid($request->ivr_builder_uuid);
             $ivr_builder_filter_conditions = self::where('ivr_builder_id', $ivr_builder_id);
+        } else if ($campaign_id == null &&  $target_id != 0) {
+
+            $ivr_builder_filter_conditions = self::where('target_id', $target_id);
         } else {
             $ivr_builder_filter_conditions = self::where([['campaign_id', $campaign_id], ['target_id', $target_id]]);
         }
-
 
         if ($ivr_builder_filter_conditions->count() > 0) {
             $ivr_builder_filter_conditions->delete();
