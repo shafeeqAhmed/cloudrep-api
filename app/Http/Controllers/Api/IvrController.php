@@ -14,6 +14,7 @@ use Illuminate\support\Str;
 use App\Models\Tags;
 use App\Models\TagOperators;
 use App\Models\IvrBuilderFilterConditions;
+use App\Models\TargetListing;
 
 class IvrController extends ApiController
 {
@@ -173,6 +174,23 @@ class IvrController extends ApiController
         $request->validate(['ivr_builder_uuid' => 'required']);
         $ivr_builder_id = IvrBuilder::getIdByUuid($request->ivr_builder_uuid);
         $Ivr_builder_filter_conditions = IvrBuilderFilterConditions::with('filter_condition_values', 'tag', 'tag_operator')->where('ivr_builder_id', $ivr_builder_id)->get();
+        return $this->respond([
+            'status' => true,
+            'message' => 'Filter Record has been fetched successfully!',
+            'data' => [
+                'filters' => IvrNodeFiltersResource::collection($Ivr_builder_filter_conditions)
+            ],
+        ]);
+    }
+
+
+    public function getIvrRoutingTargetFilterRecord(Request $request)
+    {
+        $request->validate(['target_uuid' => 'required']);
+
+        $target_id = TargetListing::getIdByUuid($request->target_uuid);
+        $Ivr_builder_filter_conditions = IvrBuilderFilterConditions::with('filter_condition_values', 'tag', 'tag_operator')->where('target_id', $target_id)->get();
+
         return $this->respond([
             'status' => true,
             'message' => 'Filter Record has been fetched successfully!',
