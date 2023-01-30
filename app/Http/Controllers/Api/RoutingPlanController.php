@@ -9,6 +9,7 @@ use App\Models\RoutingPlan;
 use App\Models\TargetListing;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\IvrBuilderFilterConditions;
 
 class RoutingPlanController extends ApiController
 {
@@ -304,6 +305,14 @@ class RoutingPlanController extends ApiController
 
     public function deleteRoutingPlan(Request $request)
     {
+        $target_id = RoutingPlan::where('uuid', $request->uuid)->first()->target_id;
+
+        $filterConditions = IvrBuilderFilterConditions::where('target_id', $target_id);
+
+        if ($filterConditions->count() > 0) {
+            $filterConditions->delete();
+        }
+
         RoutingPlan::where('uuid', $request->uuid)->forceDelete();
         return $this->respond([
             'status' => true,
