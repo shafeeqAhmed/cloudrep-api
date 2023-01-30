@@ -67,7 +67,6 @@ class IvrAction
             $this->ivr->increaseDialAttempt(request('attempt'));
             $this->response = $this->ivr->getTwiml($this->record);
         } else {
-
             //move to the next number
             IvrNodesRetries::increament(request('CallSid'), 'dial', $this->record->uuid);
             // get total numbers of retries

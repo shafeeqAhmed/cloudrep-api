@@ -116,4 +116,11 @@ class TargetListing extends Model
         }
         return  self::where('uuid', request('uuid'))->update($this->fillableFromArray($data));
     }
+    public function filterConditions()
+    {
+        return $this->hasMany(IvrBuilderFilterConditions::class, 'target_id', 'id')
+            ->join('tag_operators as to', 'to.id', '=', 'ivr_builder_filter_conditions.tag_operator_id')
+            ->join('tags', 'tags.id', '=', 'ivr_builder_filter_conditions.tag_id')
+            ->select('ivr_builder_filter_conditions.*', 'to.value as select_operator_for_tag', 'tags.value as tag_value');
+    }
 }

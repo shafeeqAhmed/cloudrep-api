@@ -23,8 +23,8 @@ class FilterDetail
         $conditions = collect($conditions);
         $andConditions = $conditions->where('type', 'and');
         $orConditions = $conditions->where('type', 'or');
-        $this->andOperator = $this->testFilterConditions($andConditions);
-        $this->orOpertor =  $this->testFilterConditions($orConditions);
+        $this->andOperator = $this->filterConditions($andConditions);
+        $this->orOpertor =  $this->filterConditions($orConditions);
 
         if ($andConditions->isNotEmpty() && $orConditions->isNotEmpty()) {
             return $this->andOperator && $this->orOpertor;
@@ -36,7 +36,7 @@ class FilterDetail
             return $this->orOpertor;
         }
     }
-    public function testFilterConditions($conditions)
+    public function filterConditions($conditions)
     {
         foreach ($conditions as $condition) {
             $this->values = $condition['tag_operator_code'];

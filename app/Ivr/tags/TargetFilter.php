@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Ivr;
+namespace App\Ivr\Tags;
 
-use App\Models\IvrBuilder;
-use App\Http\Resources\RouterNodeFilterResource;
+use App\Models\TargetListing;
 use App\Ivr\Tags\FilterDetail;
 
-class IvrNodesFilter
+class TargetFilter
 {
 
-    private $ivrBuilder;
+    private $targetListing;
     private $node;
     private $nextNode;
 
@@ -17,17 +16,16 @@ class IvrNodesFilter
     public function __construct($node)
     {
         $this->node = $node;
-        $this->ivrBuilder = new IvrBuilder();
+        $this->targetListing = new TargetListing();
     }
 
 
-    public function getFilters()
+    public function getFilters($targetId)
     {
 
-        $router_childs = $this->ivrBuilder
+        $router_childs = $this->targetListing
             ->with(['filterConditions.filter_condition_values', 'filterConditions.tag', 'filterConditions.tag_operator'])
-            ->orderBy('priority', 'asc')
-            ->where([['parent_id', $this->node->id], ['node_type', 'filter']])->get();
+            ->where([['target_id', $targetId]])->get();
         $filters_arr = array();
         foreach ($router_childs as $index => $record) {
 

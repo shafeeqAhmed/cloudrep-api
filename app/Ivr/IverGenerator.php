@@ -5,6 +5,7 @@ namespace App\Ivr;
 use App\Models\IvrNodesRetries;
 use App\Models\Routing;
 use Twilio\TwiML\VoiceResponse;
+use App\Ivr\Tags\IvrFilter;
 
 class IverGenerator
 {
@@ -16,6 +17,8 @@ class IverGenerator
     private $gatherAttempt;
     private $voice;
     private $language;
+    private $containFilter;
+    private $numbers;
     public function __construct()
     {
         $this->response = new VoiceResponse;
@@ -24,6 +27,7 @@ class IverGenerator
         $this->gatherAttempt = 1;
         $this->voice = 'woman';
         $this->language = 'en-US';
+        $this->containFilter = true;
     }
 
 
@@ -116,6 +120,7 @@ class IverGenerator
     public function dial()
     {
         $data = [];
+
         $data['action'] = secure_url("/api/our-ivr-action?uuid=" . $this->record->uuid . "&attempt=$this->dialAttempt");
 
         if ($this->record->dial_recording_setting == 'Off') {
@@ -137,28 +142,60 @@ class IverGenerator
             }
         }
 
-
-
-
-        // get routing numbers targets or routing plans
-        $numbers = Routing::getRoutingForAction($this->record->dial_routing_plan);
-        // get current number count
-        $currentCount = IvrNodesRetries::getCount(request('CallSid'), $this->record->uuid);
-
-        $number = $numbers[$currentCount]['destination'];
-
-
-
-
-        $dial = $this->response->dial('', $data);
-
         //add call back url
         $callBack['statusCallbackEvent'] = 'initiated ringing answered completed';
         $callBack['statusCallback'] = secure_url("/api/dial-number-status-call-back");
         $callBack['statusCallbackMethod'] = 'POST';
 
-        $dial->number($number, $callBack);
+
+        // // get routing numbers targets or routing plans
+        $this->numbers = Routing::getRoutingForAction($this->record->dial_routing_plan);
+
+        // // get current number count
+        // $currentCount = IvrNodesRetries::getCount(request('CallSid'), $this->record->uuid);
+
+        // $number = $numbers[$currentCount]['destination'];
+
+        // dd($this->getN());
+
+        $number = $this->getNumber();
+
+        if (is_null($number)) {
+            $this->simpleHanup();
+        } else {
+            $dial = $this->response->dial('', $data);
+            $dial->number($number, $callBack);
+        }
     }
+
+    public function getNumber()
+    {
+        $currentCount = IvrNodesRetries::getCount(request('CallSid'), $this->record->uuid);
+
+        // dd($currentCount);
+        if ($this->containFilter) {
+            if (true) {
+                // if (false) {
+                dd($this->numbers[$currentCount]);
+                return $this->numbers[$currentCount]['destination'];
+            } else {
+                //move to the next number
+                IvrNodesRetries::increament(request('CallSid'), 'dial', $this->record->uuid);
+                // if filter does not full fill the condition
+                $tries = IvrNodesRetries::getCount(request('CallSid'), $this->record->uuid);
+
+                if ($tries >= count($this->numbers)) {
+                    return null;
+                } else {
+                    return  $this->getNumber();
+                }
+            }
+        } else {
+            return $this->numbers[$currentCount]['destination'];
+        }
+    }
+
+
     public function play()
     {
         for ($i = 1; $i <=  $this->record->no_of_reproduce; $i++) {
@@ -227,7 +264,7 @@ class IverGenerator
     public function router()
     {
         //get next route
-        $ivrNodeFilter = new IvrNodesFilter($this->record);
+        $ivrNodeFilter = new IvrFilter($this->record);
 
 
         //getNextNode(id)
