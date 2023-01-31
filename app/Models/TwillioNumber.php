@@ -176,6 +176,8 @@ class TwillioNumber extends Model
             ->leftJoin('users as client', 'client.id', '=', 'c.user_id')
             ->select('u.id as publisher_id', 'client.id as client_id', 'c.id as campaign_id', 'c.routing', 'c.ivr_id')
             ->first();
+
+
         // $data['records']  = $record;
 
         $targets = TargetListing::where('campaign_id', $record->campaign_id)
@@ -191,6 +193,7 @@ class TwillioNumber extends Model
 
             ->join('target_listings as tl', 'tl.id', '=', 'routing_plans.target_id')
             ->select(
+                'tl.id',
                 'routing_plans.uuid',
                 'routing_plans.priority',
                 'routing_plans.weight',

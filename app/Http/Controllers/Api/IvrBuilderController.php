@@ -531,11 +531,7 @@ class IvrBuilderController extends ApiController
 
     public function ourIvr()
     {
-        // $ivrGenerator = new IverGenerator();
-        // $ivr = Ivr::first();
 
-        // $record = $ivr->childs->whereNull('parent_id')->first();
-        // return $ivrGenerator->getTwiml($record);
 
         $detail  = TwillioNumber::getNumberDetails(request('To'));
         $ivrGenerator = new IverGenerator();
@@ -703,8 +699,8 @@ class IvrBuilderController extends ApiController
         $ivr_builder = IvrBuilder::with('filterConditions')->whereIn('uuid', $data['uuids'])->get();
         if (isset($ivr_builder[0])) {
             if ($ivr_builder[0]->filterConditions->count() > 0) {
-                  $condition_uuid =   $ivr_builder[0]->filterConditions->pluck('uuid');
-             IvrBuilderFilterConditions::whereIn('uuid', $condition_uuid)->delete();
+                $condition_uuid =   $ivr_builder[0]->filterConditions->pluck('uuid');
+                IvrBuilderFilterConditions::whereIn('uuid', $condition_uuid)->delete();
             }
         }
 

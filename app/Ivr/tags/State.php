@@ -2,6 +2,7 @@
 
 namespace App\Ivr\Tags;
 
+use App\Models\CampaignGeoLocation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 
@@ -13,7 +14,6 @@ class State
     private $orOpertor;
     public function __construct()
     {
-
         $this->value = request('CallerState');
     }
 
@@ -34,6 +34,16 @@ class State
         }
         if ($orConditions->isNotEmpty()) {
             return $this->orOpertor;
+        }
+        if (is_null($this->orOpertor)) {
+            return false;
+        }
+    }
+    public function isAllowRegion($campaignId)
+    {
+        $zipCode = CampaignGeoLocation::where('campaign_id', $campaignId)->select('zipcode')->get();
+        if ($zipCode) {
+            dd($zipCode);
         }
     }
     public function filterConditions($conditions)

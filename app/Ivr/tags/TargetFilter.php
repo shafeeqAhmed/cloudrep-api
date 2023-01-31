@@ -3,6 +3,7 @@
 namespace App\Ivr\Tags;
 
 use App\Models\TargetListing;
+use Illuminate\Support\Facades\Log;
 
 class TargetFilter
 {
@@ -36,6 +37,7 @@ class TargetFilter
             $list[$index]['type'] = $condition['type'];
             $list[$index]['selected_value_for_tag'] = $condition->tag_value;
             $list[$index]['select_operator_for_tag'] = $condition->select_operator_for_tag;
+            $list[$index]['destination'] = TargetListing::where('id', $condition->target_id)->value('destination');
             // $list[$index]['tag_operator_list'] = $condition->tag_operator->pluck('value');
             // $list[$index]['tag_operator_value'] = $condition->filter_condition_values->pluck('tag_operator_value');
             $list[$index]['tag_operator_code'] = $condition->filter_condition_values->pluck('tag_operator_code');
@@ -45,10 +47,17 @@ class TargetFilter
     }
     public function check($id)
     {
-
         $state = new State();
         $conditions = $this->getFilters($id);
-        // dd($conditions);
-        return ['containFilter' => count($conditions) > 0, 'isCorrect' => $state->isCorrect($conditions)];
+        $isCorrect = $state->isCorrect($conditions);
+        // Log::debug($isCorrect);
+        // Log::info($conditions);
+        return ['containFilter' => count($conditions) > 0, 'isCorrect' => $isCorrect, $id];
+        // return ['containFilter' => true, 'isCorrect' => false];
+        // if ($id = 6) {
+        //     return  ['containFilter' => true, 'isCorrect' => true];
+        // } else {
+        // return ['containFilter' => true, 'isCorrect' => false];
+        // }
     }
 }

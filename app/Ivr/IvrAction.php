@@ -20,12 +20,16 @@ class IvrAction
     }
     public function getAction()
     {
+
         $this->record = IvrBuilder::getRecordWithAllRelationship('uuid', request('uuid'));
         if (method_exists(self::class, $this->record->node_type)) {
             call_user_func_array([$this, $this->record->node_type], [$this->record]);
         }
         return $this->response;
     }
+    // private function isAllowRegion(){
+    //     $this->record
+    // }
     private function menu()
     {
         $digits = request('Digits');

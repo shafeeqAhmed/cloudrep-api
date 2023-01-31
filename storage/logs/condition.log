@@ -1,0 +1,58 @@
+[2023-01-31 13:32:16] local.INFO: array (
+  0 =>
+  array (
+    'id' => 4,
+    'target_id' => 6,
+    'type' => 'and',
+    'selected_value_for_tag' => 'state',
+    'select_operator_for_tag' => 'equal_to',
+    'destination' => '+923077020163',
+    'tag_operator_code' =>
+    Illuminate\Support\Collection::__set_state(array(
+       'items' =>
+      array (
+        0 => 'AZ',
+      ),
+       'escapeWhenCastingToString' => false,
+    )),
+  ),
+)
+[2023-01-31 13:32:16] local.INFO: array (
+  0 =>
+  array (
+    'id' => 6,
+    'target_id' => 4,
+    'type' => 'and',
+    'selected_value_for_tag' => 'state',
+    'select_operator_for_tag' => 'equal_to',
+    'destination' => '+923012233654',
+    'tag_operator_code' =>
+    Illuminate\Support\Collection::__set_state(array(
+       'items' =>
+      array (
+        0 => 'IA',
+      ),
+       'escapeWhenCastingToString' => false,
+    )),
+  ),
+)
+[2023-01-31 13:32:16] local.INFO: array (
+  0 =>
+  array (
+    'id' => 5,
+    'target_id' => 5,
+    'type' => 'and',
+    'selected_value_for_tag' => 'state',
+    'select_operator_for_tag' => 'equal_to',
+    'destination' => '+923023366995',
+    'tag_operator_code' =>
+    Illuminate\Support\Collection::__set_state(array(
+       'items' =>
+      array (
+        0 => 'AK',
+      ),
+       'escapeWhenCastingToString' => false,
+    )),
+  ),
+)
+[2023-01-31 13:32:16] local.ALERT: this is the hangup call
