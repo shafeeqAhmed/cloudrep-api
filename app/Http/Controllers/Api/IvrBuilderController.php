@@ -537,10 +537,10 @@ class IvrBuilderController extends ApiController
         $ivrGenerator = new IverGenerator();
 
         $obj = new State();
-        $region = $obj->isAllowRegion($detail->campaign_id);
-        if (!$region) {
-            return  $ivrGenerator->directHangupWithMessage('Sorry This region is not allowed against this campaign.Thanks calling on cloudrep, Good Bye.!');
-        }
+        // $region = $obj->isAllowRegion($detail->campaign_id);
+        // if (!$region) {
+        //     return  $ivrGenerator->directHangupWithMessage('Sorry This region is not allowed against this campaign.Thanks calling on cloudrep, Good Bye.!');
+        // }
         // if there is no detail against twilio number
         if (!$detail) {
             return  $ivrGenerator->directHangupWithMessage('Sorry This Number is not associated with any Campaign Good Bye.');

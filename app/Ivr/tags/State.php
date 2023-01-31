@@ -16,7 +16,7 @@ class State
     public function __construct()
     {
         $this->value = request('CallerState');
-        $this->region = request('region');
+        $this->region = request('FromZip');
     }
 
     public function isCorrect($conditions)
