@@ -29,7 +29,7 @@ class DirectCallFarwarding
         $data1['statusCallbackMethod'] = 'POST';
 
         // get routing numbers targets or routing plans
-        $numbers  = TwillioNumber::getDidDetail($this->formatNumber());
+        $numbers  = TwillioNumber::getDetail($this->formatNumber());
         // get current number count
         $currentCount = IvrNodesRetries::getCount(request('CallSid'), $numbers[0]['uuid']);
 
@@ -49,7 +49,7 @@ class DirectCallFarwarding
     {
 
         // get routing numbers targets or routing plans
-        $numbers  = TwillioNumber::getDidDetail($this->formatNumber());
+        $numbers  = TwillioNumber::getDetail($this->formatNumber());
 
         //move to the next number
         IvrNodesRetries::increament(request('CallSid'), 'dial', $numbers[0]['uuid']);

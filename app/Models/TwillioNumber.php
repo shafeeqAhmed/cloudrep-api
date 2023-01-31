@@ -131,7 +131,7 @@ class TwillioNumber extends Model
             ->select('u.id as publisher_id', 'client.id as client_id', 'c.id as campaign_id', 'c.routing', 'c.ivr_id')
             ->first();
     }
-    public static function getDidDetail($number)
+    public static function getDetail($number)
     {
         // $record = self::where('number', $number)
         //     ->join('campaigns as c', 'c.id', '=', 'twillio_numbers.campaign_id')
