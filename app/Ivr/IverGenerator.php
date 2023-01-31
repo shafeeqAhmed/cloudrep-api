@@ -18,7 +18,6 @@ class IverGenerator
     private $gatherAttempt;
     private $voice;
     private $language;
-    private $containFilter;
     private $numbers;
     public function __construct()
     {
@@ -28,7 +27,6 @@ class IverGenerator
         $this->gatherAttempt = 1;
         $this->voice = 'woman';
         $this->language = 'en-US';
-        $this->containFilter = true;
     }
 
 

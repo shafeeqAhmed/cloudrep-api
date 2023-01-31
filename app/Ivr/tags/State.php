@@ -12,9 +12,11 @@ class State
     private $value;
     private $andOperator;
     private $orOpertor;
+    private $region;
     public function __construct()
     {
         $this->value = request('CallerState');
+        $this->region = request('region');
     }
 
     public function isCorrect($conditions)
@@ -41,9 +43,11 @@ class State
     }
     public function isAllowRegion($campaignId)
     {
-        $zipCode = CampaignGeoLocation::where('campaign_id', $campaignId)->select('zipcode')->get();
-        if ($zipCode) {
-            dd($zipCode);
+        $zipCode = CampaignGeoLocation::where('campaign_id', $campaignId)->pluck('zipcode');
+        if ($zipCode->isNotEmpty()) {
+            return $zipCode->contains($this->region);
+        } else {
+            return true;
         }
     }
     public function filterConditions($conditions)
