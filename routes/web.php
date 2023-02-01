@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WalletController;
 use App\Http\Controllers\Api\CampaignReportingController;
 use App\Http\Controllers\Api\IvrController;
+use Illuminate\Support\Facades\Artisan;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,6 +16,20 @@ use App\Http\Controllers\Api\IvrController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+Route::get('/clear', function () {
+
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+    Artisan::call('optimize:clear');
+
+
+    return "Cleared!";
+});
 
 Route::get('/', function () {
     return view('welcome');
