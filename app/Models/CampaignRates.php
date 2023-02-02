@@ -96,4 +96,25 @@ class CampaignRates extends Model
 
         return $rates;
     }
+    public static function getCampaignRatesForTargetNumber($clientId, $campaignId, $targetId)
+    {
+        return CampaignRates::where(
+            [
+                'client_id' => $clientId,
+                'campaign_id' => $campaignId,
+                'target_id' => $targetId,
+                'type' => 'target'
+            ]
+        )->first();
+    }
+
+    public static function getCampaignRatesForPubliherNumber($publisherId, $campaignId,  $publisherNumber)
+    {
+        return CampaignRates::join('twillio_numbers as tn', 'tn.id', '=', 'campaign_rates.number_id')
+            ->where('campaign_rates.publisher_id', $publisherId)
+            ->where('campaign_rates.campaign_id', $campaignId)
+            ->where('tn.number', $publisherNumber)
+            ->select('campaign_rates.*')
+            ->first();
+    }
 }

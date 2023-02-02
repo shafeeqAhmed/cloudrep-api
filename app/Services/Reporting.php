@@ -170,35 +170,45 @@ class Reporting
     private function AddTransaction($reportingRecord)
     {
 
-        /*  $clientid = 4;
-        $campaignId = 3; */
-        // $target_id = $reportingRecord->target_id;
-        $target_id = 2;
+        // $campaignRatesForPubliherNumber = CampaignRates::getCampaignRatesForPubliherNumber($reportingRecord->publisher_id, $reportingRecord->campaign_id, $reportingRecord->dialed);
+
+        // return 'lahore';
         $callDuration = request('CallDuration');
-        $campaign_rates = CampaignRates::where([['clientid', $reportingRecord->client_id], ['campaignId', $reportingRecord->campaign_id], ['target_id', $target_id]])->first();
+
+
         $campaign = Campaign::find($reportingRecord->campaign_id);
+        //upadte global rates
+        $client_cost_per_call = $campaign->cost_per_call;
+        $client_per_call_duration = $campaign->client_per_call_duration;
 
-        if ($campaign_rates) {
+        $payout_per_call = $campaign->payout_per_call;
+        $publisher_per_call_duration = $campaign->publisher_per_call_duration;
 
-            $client = User::find($campaign_rates->client_id);
-            $publisher = User::find($campaign_rates->publisher_id);
 
-            $client_cost_per_call = $campaign_rates->cost_per_call;
-            $client_per_call_duration = $campaign_rates->cost_per_call_duration;
 
-            $payout_per_call = $campaign_rates->payout_per_call;
-            $publisher_per_call_duration = $campaign_rates->payout_per_call_duration;
-        } else {
 
-            $client = User::find($reportingRecord->client_id);
-            $publisher = User::find($reportingRecord->publisher_id);
+        $client = User::find($reportingRecord->client_id);
+        $publisher = User::find($reportingRecord->publisher_id);
 
-            $client_cost_per_call = $campaign->cost_per_call;
-            $client_per_call_duration = $campaign->client_per_call_duration;
 
-            $payout_per_call = $campaign->payout_per_call;
-            $publisher_per_call_duration = $campaign->publisher_per_call_duration;
+        //get spacific rate against buyer number
+        $campaignRatesForTargetNumber = CampaignRates::getCampaignRatesForTargetNumber($reportingRecord->client_id, $reportingRecord->campaign_id, $reportingRecord->target_id);
+
+        if ($campaignRatesForTargetNumber) {
+
+            $client_cost_per_call = $campaignRatesForTargetNumber->cost_per_call;
+            $client_per_call_duration = $campaignRatesForTargetNumber->cost_per_call_duration;
         }
+
+        $campaignRatesForPubliherNumber = CampaignRates::getCampaignRatesForPubliherNumber($reportingRecord->publisher_id, $reportingRecord->campaign_id, $reportingRecord->dialed);
+        if ($campaignRatesForPubliherNumber) {
+
+            $payout_per_call = $campaignRatesForPubliherNumber->payout_per_call;
+            $publisher_per_call_duration = $campaignRatesForPubliherNumber->payout_per_call_duration;
+        }
+
+
+        // dd($client_cost_per_call, $client_per_call_duration);
         // calculate revenue
         if ($callDuration >= $client_per_call_duration) {
             $client->withdraw($client_cost_per_call, ['description' => 'cost for call', 'campaign_id' => $reportingRecord->campaign_id]);
