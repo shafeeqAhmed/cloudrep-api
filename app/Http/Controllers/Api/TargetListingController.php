@@ -6,6 +6,7 @@ use App\Http\Resources\TargetListingResource;
 use App\Models\Campaign;
 use App\Models\TargetListing;
 use App\Models\User;
+use App\Models\IvrBuilderFilterConditions;
 use Illuminate\Http\Request;
 
 class TargetListingController extends ApiController
@@ -188,6 +189,28 @@ class TargetListingController extends ApiController
             'data' => [
                 'targetData' => $target
             ]
+        ]);
+    }
+
+
+    public function deleteTarget(Request $request)
+    {
+
+        $target_id = TargetListing::where('uuid', $request->uuid)->first()->id;
+        $filterConditions = IvrBuilderFilterConditions::where('target_id', $target_id);
+
+        if ($filterConditions->count() > 0) {
+            $filterConditions->delete();
+        }
+
+        $data =  $request->validate([
+            'uuid' => 'required',
+        ]);
+        TargetListing::where('uuid', $request->uuid)->delete($data);
+        return $this->respond([
+            'status' => true,
+            'message' => 'Target has been updated successfully!',
+            'data' => []
         ]);
     }
 
