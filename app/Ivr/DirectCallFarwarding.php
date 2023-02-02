@@ -26,7 +26,6 @@ class DirectCallFarwarding
         $this->uuid = $this->numbers[0]['uuid'];
         $number = $this->getNumber();
 
-
         $data['action'] = secure_url("/api/our-ivr-action?To=" . $this->formatNumber() . "&type=directCall");
         $data['record'] = 'record-from-answer-dual';
         $data['timeout'] = 50;
@@ -49,34 +48,44 @@ class DirectCallFarwarding
         }
 
         return $this->response;
-
-        // $dial = $this->response->dial('', $data);
-        // $dial->number($this->formatNumber($this->numbers[$currentCount]['destination']), $callBack);
-        // return $this->response;
     }
 
     public function directAction()
     {
 
         // get routing numbers targets or routing plans
-        $numbers  = TwillioNumber::getDetail($this->formatNumber());
-
+        $this->numbers  = TwillioNumber::getDetail($this->formatNumber());
+        $this->uuid = $this->numbers[0]['uuid'];
+        // dd(count($this->numbers), $this->numbers);
         //move to the next number
-        IvrNodesRetries::increament(request('CallSid'), 'dial', $numbers[0]['uuid']);
+        IvrNodesRetries::increament(request('CallSid'), 'dial', $this->uuid);
         // get total numbers of retries
-        $tries = IvrNodesRetries::getCount(request('CallSid'), $numbers[0]['uuid']);
+        $tries = IvrNodesRetries::getCount(request('CallSid'), $this->uuid);
 
 
-        if ($tries < count($numbers)) {
+        if ($tries < count($this->numbers)) {
 
             if (request('DialCallStatus') == 'completed') {
-                return $this->response->hangup();
+                $this->response->hangup();
             }
             return $this->directDialing();
         } else {
             $this->response->hangup();
-            return $this->response;
+            $this->response;
         }
+
+
+        return $this->response;
+
+
+        // if (is_null($number)) {
+        //     $this->response->hangup();
+        // } else {
+        //     $dial = $this->response->dial('', $data);
+        //     $dial->number($number, $callBack);
+        // }
+
+
     }
     public function getNumber()
     {
