@@ -7,6 +7,7 @@ use App\Http\Requests\CampaignRequest;
 use App\Http\Resources\CampaignGeoLocationResource;
 use App\Http\Resources\CampaignResource;
 use App\Http\Resources\IvrNodeFiltersResource;
+use App\Http\Resources\CampaignCustomResource;
 use App\Models\BussinesCategory;
 use App\Models\Campaign;
 use App\Models\Currency;
@@ -20,6 +21,8 @@ use App\Models\CompanyVertical;
 use App\Models\IvrBuilderFilterConditions;
 use App\Models\Service;
 use App\Models\User;
+use App\Models\CampaignRates;
+use App\Models\TwillioNumber;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -988,6 +991,7 @@ class CompaignController extends APiController
             ]);
         }
     }
+
 
 
     public function storeCampaignClient(Request $request)
@@ -2816,6 +2820,82 @@ class CompaignController extends APiController
             'message' => 'Filter Record has been fetched successfully!',
             'data' => [
                 'filters' => IvrNodeFiltersResource::collection($Ivr_builder_filter_conditions)
+            ],
+        ]);
+    }
+
+
+    public function getCustomCampaignTargetRates(Request $request)
+    {
+        $request->validate(
+            [
+                'campaign_uuid' => 'required',
+                'target_uuid' => 'required'
+            ]
+        );
+
+        $campaignRates = CampaignRates::getCampignTargetRates($request);
+        return $this->respond([
+            'status' => false,
+            'message' => 'Campaign Rates fetched Successfully',
+            'data' =>  [
+                'rates' => new CampaignCustomResource($campaignRates)
+            ]
+        ]);
+    }
+
+    public function getCustomCampaignPublisherPayoutRates(Request $request)
+    {
+        $request->validate(
+            [
+                'campaign_uuid' => 'required',
+                'publisher_uuid' => 'required'
+            ]
+        );
+
+        $campaignRates = CampaignRates::getCampignPublisherPayoutRates($request);
+        return $this->respond([
+            'status' => false,
+            'message' => 'Campaign Rates fetched Successfully',
+            'data' =>  [
+                'rates' => new CampaignCustomResource($campaignRates)
+            ]
+        ]);
+    }
+
+    public function storeCustomCampaignTargetRates(Request $request)
+    {
+        $request->validate([
+            'campaign_uuid' => 'required|uuid',
+            'target_uuid' => 'required|uuid',
+            'type' => 'required|string'
+        ]);
+
+        $custom_rates = CampaignRates::saveCustomCampaignRates($request);
+        return $this->respond([
+            'status' => true,
+            'message' => 'Campaign Custom Rates Saved Successfully!',
+            'data' => [
+                'campaign' => []
+            ],
+        ]);
+    }
+
+    public function storeCustomCampaignPublisherPayoutRates(Request $request)
+    {
+        $request->validate([
+            'campaign_uuid' => 'required|uuid',
+            'publisher_uuid' => 'required|uuid',
+            'type' => 'required|string',
+            'number' => 'required'
+        ]);
+
+        $custom_rates = CampaignRates::saveCustomCampaignPublisherPayoutRates($request);
+        return $this->respond([
+            'status' => true,
+            'message' => 'Campaign Custom Rates Saved Successfully!',
+            'data' => [
+                'campaign' => []
             ],
         ]);
     }
