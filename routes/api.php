@@ -309,6 +309,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('update-target', [TargetListingController::class, 'updateTarget']);
     Route::get('get-target-listing', [TargetListingController::class, 'getTargets']);
     Route::get('get-target-detail/{uuid}', [TargetListingController::class, 'getTargetDetail']);
+    Route::delete('delete-target', [TargetListingController::class, 'deleteTarget']);
+
 
     //Routing Api's
     Route::get('routings', [RoutingPlanController::class, 'routings']);

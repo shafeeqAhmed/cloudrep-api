@@ -116,8 +116,10 @@ class IvrController extends ApiController
         $data = [];
         $ivr = Ivr::where('uuid', $request->uuid)->select('id', 'uuid', 'name')->first();
 
-        //restore soft deleted record
-        IvrBuilder::where('ivr_id', $ivr->id)->whereNotNull('deleted_at')->onlyTrashed()->restore();
+        if ($request->router_node != 1) {
+            //restore soft deleted record
+            IvrBuilder::where('ivr_id', $ivr->id)->whereNotNull('deleted_at')->onlyTrashed()->restore();
+        }
 
         $data['ivr'] = $ivr->toArray();
         $IvrNodesResponse = new IvrNodesResponse();
