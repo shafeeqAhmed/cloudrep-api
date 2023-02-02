@@ -8,6 +8,7 @@ use App\Models\TargetListing;
 use App\Models\TwillioNumber;
 use Carbon\Carbon;
 use App\Models\User;
+use App\Models\CampaignRates;
 
 class Reporting
 {
@@ -168,16 +169,36 @@ class Reporting
     }
     private function AddTransaction($reportingRecord)
     {
-        $campaign = Campaign::find($reportingRecord->campaign_id);
-        $client = User::find($reportingRecord->client_id);
-        $publisher = User::find($reportingRecord->publisher_id);
 
-
-
-
-        $client_cost_per_call = $campaign->cost_per_call;
-        $client_per_call_duration = $campaign->client_per_call_duration;
+        /*  $clientid = 4;
+        $campaignId = 3; */
+        // $target_id = $reportingRecord->target_id;
+        $target_id = 2;
         $callDuration = request('CallDuration');
+        $campaign_rates = CampaignRates::where([['clientid', $reportingRecord->client_id], ['campaignId', $reportingRecord->campaign_id], ['target_id', $target_id]])->first();
+        $campaign = Campaign::find($reportingRecord->campaign_id);
+
+        if ($campaign_rates) {
+
+            $client = User::find($campaign_rates->client_id);
+            $publisher = User::find($campaign_rates->publisher_id);
+
+            $client_cost_per_call = $campaign_rates->cost_per_call;
+            $client_per_call_duration = $campaign_rates->cost_per_call_duration;
+
+            $payout_per_call = $campaign_rates->payout_per_call;
+            $publisher_per_call_duration = $campaign_rates->payout_per_call_duration;
+        } else {
+
+            $client = User::find($reportingRecord->client_id);
+            $publisher = User::find($reportingRecord->publisher_id);
+
+            $client_cost_per_call = $campaign->cost_per_call;
+            $client_per_call_duration = $campaign->client_per_call_duration;
+
+            $payout_per_call = $campaign->payout_per_call;
+            $publisher_per_call_duration = $campaign->publisher_per_call_duration;
+        }
         // calculate revenue
         if ($callDuration >= $client_per_call_duration) {
             $client->withdraw($client_cost_per_call, ['description' => 'cost for call', 'campaign_id' => $reportingRecord->campaign_id]);
@@ -186,8 +207,7 @@ class Reporting
         }
 
         // calculate payout
-        $payout_per_call = $campaign->payout_per_call;
-        $publisher_per_call_duration = $campaign->publisher_per_call_duration;
+
         if ($callDuration >= $publisher_per_call_duration) {
 
             $publisher->deposit($payout_per_call, ['description' => 'earn from call', 'campaign_id' => $reportingRecord->campaign_id]);
