@@ -2826,12 +2826,19 @@ class CompaignController extends APiController
 
     public function getCustomCampaignTargetRates(Request $request)
     {
-        $campaignServices = CampaignRates::getUserService(User::getIdByUuid($request->user_uuid));
+        $request->validate(
+            [
+                'campaign_uuid' => 'required',
+                'target_uuid' => 'required'
+            ]
+        );
+
+        $campaignRates = CampaignRates::getCampignTargetRates($request);
         return $this->respond([
             'status' => false,
-            'message' => 'Campaign Services uuids Not Found',
+            'message' => 'Campaign Rates fetched Successfully',
             'data' =>  [
-                'services' => $campaignServices
+                'rates' => new CampaignCustomResource($campaignRates)
             ]
         ]);
     }

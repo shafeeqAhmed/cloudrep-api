@@ -33,12 +33,11 @@ class CampaignRates extends Model
         return self::whereUuid($uuid)->value('id');
     }
 
-    public static function getUserServices($userId)
+    public static function getCampignTargetRates($request)
     {
-        return  self::join('services', 'services.id', '=', 'client_services.service_id')
-            ->where('client_services.user_id', $userId)
-            ->where('client_services.is_active', '=', '1')
-            ->pluck('services.service_uuid');
+        $campaign_id = Campaign::getIdByUuid($request->campaign_uuid);
+        $target_id = TargetListing::getIdByUuid($request->target_uuid) ?? 0;
+        return  self::where([['campaign_id', $campaign_id], ['target_id', $target_id]])->pluck('cost_per_call', 'cost_per_call_duration');
     }
 
 
