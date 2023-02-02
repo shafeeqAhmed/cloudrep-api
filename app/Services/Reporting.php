@@ -15,11 +15,13 @@ class Reporting
     private $payout;
     private $revenue;
     private $profit;
+    private $targetId;
     public function __construct()
     {
         $this->payout = 0;
         $this->revenue = 0;
         $this->profit = 0;
+        $this->targetId = 0;
     }
     public function storeCampaignResults()
     {
@@ -147,9 +149,12 @@ class Reporting
 
 
         if (request('CallStatus') == 'completed') {
-            $data['target_id'] = TargetListing::where('destination', request('To'))->value('id');
 
-            // $data['time_to_call'] = '';
+
+
+            $this->targetId = TargetListing::where('destination', request('To'))
+                ->where('campaign_id', $record->campaign_id)->value('id');
+            $data['target_id'] = $this->targetId;
             $data['duplicate'] = CampaignReporting::whereBetween('created_at', [now()->subMinutes(1440), now()])
                 ->where('caller_id', request('Caller'))->where('dialed', request('ForwardedFrom'))->exists();
             $this->AddTransaction($record);
@@ -164,13 +169,10 @@ class Reporting
             $data['recording'] = request('RecordingUrl');
             $data['completed_at'] = getStandarDateTime(request('Timestamp'));
         }
-
         $record->update($data);
     }
     private function AddTransaction($reportingRecord)
     {
-
-        // $campaignRatesForPubliherNumber = CampaignRates::getCampaignRatesForPubliherNumber($reportingRecord->publisher_id, $reportingRecord->campaign_id, $reportingRecord->dialed);
 
         // return 'lahore';
         $callDuration = request('CallDuration');
@@ -192,8 +194,8 @@ class Reporting
 
 
         //get spacific rate against buyer number
-        $campaignRatesForTargetNumber = CampaignRates::getCampaignRatesForTargetNumber($reportingRecord->client_id, $reportingRecord->campaign_id, $reportingRecord->target_id);
-
+        $campaignRatesForTargetNumber = CampaignRates::getCampaignRatesForTargetNumber($reportingRecord->client_id, $reportingRecord->campaign_id, $this->targetId);
+        // dd($campaignRatesForTargetNumber);
         if ($campaignRatesForTargetNumber) {
 
             $client_cost_per_call = $campaignRatesForTargetNumber->cost_per_call;
@@ -207,7 +209,7 @@ class Reporting
             $publisher_per_call_duration = $campaignRatesForPubliherNumber->payout_per_call_duration;
         }
 
-
+        // dd($client_cost_per_call);
         // dd($client_cost_per_call, $client_per_call_duration);
         // calculate revenue
         if ($callDuration >= $client_per_call_duration) {

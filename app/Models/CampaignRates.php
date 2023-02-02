@@ -98,6 +98,7 @@ class CampaignRates extends Model
     }
     public static function getCampaignRatesForTargetNumber($clientId, $campaignId, $targetId)
     {
+        // dd($clientId, $campaignId, $targetId);
         return CampaignRates::where(
             [
                 'client_id' => $clientId,
