@@ -37,7 +37,7 @@ class CampaignRates extends Model
     {
         $campaign_id = Campaign::getIdByUuid($request->campaign_uuid);
         $target_id = TargetListing::getIdByUuid($request->target_uuid) ?? 0;
-        return  self::where([['campaign_id', $campaign_id], ['target_id', $target_id]])->pluck('cost_per_call', 'cost_per_call_duration');
+        return  self::where([['campaign_id', $campaign_id], ['target_id', $target_id]])->first();
     }
 
 
