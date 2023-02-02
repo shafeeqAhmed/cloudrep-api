@@ -22,6 +22,7 @@ use App\Models\IvrBuilderFilterConditions;
 use App\Models\Service;
 use App\Models\User;
 use App\Models\CampaignRates;
+use App\Models\TwillioNumber;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -2843,6 +2844,25 @@ class CompaignController extends APiController
         ]);
     }
 
+    public function getCustomCampaignPublisherPayoutRates(Request $request)
+    {
+        $request->validate(
+            [
+                'campaign_uuid' => 'required',
+                'publisher_uuid' => 'required'
+            ]
+        );
+
+        $campaignRates = CampaignRates::getCampignPublisherPayoutRates($request);
+        return $this->respond([
+            'status' => false,
+            'message' => 'Campaign Rates fetched Successfully',
+            'data' =>  [
+                'rates' => new CampaignCustomResource($campaignRates)
+            ]
+        ]);
+    }
+
     public function storeCustomCampaignTargetRates(Request $request)
     {
         $request->validate([
@@ -2852,6 +2872,25 @@ class CompaignController extends APiController
         ]);
 
         $custom_rates = CampaignRates::saveCustomCampaignRates($request);
+        return $this->respond([
+            'status' => true,
+            'message' => 'Campaign Custom Rates Saved Successfully!',
+            'data' => [
+                'campaign' => []
+            ],
+        ]);
+    }
+
+    public function storeCustomCampaignPublisherPayoutRates(Request $request)
+    {
+        $request->validate([
+            'campaign_uuid' => 'required|uuid',
+            'publisher_uuid' => 'required|uuid',
+            'type' => 'required|string',
+            'number' => 'required'
+        ]);
+
+        $custom_rates = CampaignRates::saveCustomCampaignPublisherPayoutRates($request);
         return $this->respond([
             'status' => true,
             'message' => 'Campaign Custom Rates Saved Successfully!',

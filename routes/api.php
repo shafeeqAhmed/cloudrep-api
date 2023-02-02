@@ -367,6 +367,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('store-campaign-rates', [CompaignController::class, 'storeCampaignRates']);
     Route::get('get-custom-campaign-target-rates', [CompaignController::class, 'getCustomCampaignTargetRates']);
     Route::post('store-custom-campaign-target-rates', [CompaignController::class, 'storeCustomCampaignTargetRates']);
+    Route::post('store-custom-campaign-publisher-payout-rates', [CompaignController::class, 'storeCustomCampaignPublisherPayoutRates']);
+    Route::get('get-custom-campaign-publisher-payout-rates', [CompaignController::class, 'getCustomCampaignPublisherPayoutRates']);
 
     //Step 9 (Campaign Images)
     Route::post('store-campaign-images', [CompaignController::class, 'storeCampaignImages']);

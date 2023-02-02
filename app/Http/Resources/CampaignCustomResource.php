@@ -19,6 +19,8 @@ class CampaignCustomResource extends JsonResource
             'type' => $this->resource->type,
             'cost_per_call' => $this->cost_per_call,
             'cost_per_call_duration' => $this->cost_per_call_duration,
+            'payout_per_call' => $this->payout_per_call,
+            'payout_per_call_duration' => $this->payout_per_call_duration,
         ];
     }
 }
