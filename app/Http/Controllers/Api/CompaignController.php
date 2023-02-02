@@ -21,6 +21,7 @@ use App\Models\CompanyVertical;
 use App\Models\IvrBuilderFilterConditions;
 use App\Models\Service;
 use App\Models\User;
+use App\Models\CampaignRates;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -2823,38 +2824,33 @@ class CompaignController extends APiController
     }
 
 
-    public function storeCustomCampaignRates(Request $request)
+    public function getCustomCampaignTargetRates(Request $request)
+    {
+        $campaignServices = CampaignRates::getUserService(User::getIdByUuid($request->user_uuid));
+        return $this->respond([
+            'status' => false,
+            'message' => 'Campaign Services uuids Not Found',
+            'data' =>  [
+                'services' => $campaignServices
+            ]
+        ]);
+    }
+
+    public function storeCustomCampaignTargetRates(Request $request)
     {
         $request->validate([
             'campaign_uuid' => 'required|uuid',
-            'user_uuid' => 'required|uuid',
-            'name' => 'required|string',
-            'email' => 'required|string',
-            'phone_no' => 'required|string',
-            'title' => 'required|string',
-            'step' => 'required',
+            'target_uuid' => 'required|uuid',
+            'type' => 'required|string'
         ]);
 
-        $user_id = User::getIdByUuid($request->user_uuid);
-
-        $custom_rates = Campaign::where('uuid', $request->campaign_uuid)->first();
-        $custom_rates->user_id = $user_id;
-        $custom_rates->name = $request->name;
-        $custom_rates->email = $request->email;
-        $custom_rates->phone_no = $request->phone_no;
-        $custom_rates->title = $request->title;
-        if ($request->step > $custom_rates->step) {
-            $custom_rates->step = $request->step;
-        }
-        $custom_rates->update();
-        if ($custom_rates) {
-            return $this->respond([
-                'status' => true,
-                'message' => 'Campaign Custom Rates Saved Successfully!',
-                'data' => [
-                    'campaign' => new CampaignCustomResource($custom_rates)
-                ],
-            ]);
-        }
+        $custom_rates = CampaignRates::saveCustomCampaignRates($request);
+        return $this->respond([
+            'status' => true,
+            'message' => 'Campaign Custom Rates Saved Successfully!',
+            'data' => [
+                'campaign' => []
+            ],
+        ]);
     }
 }
