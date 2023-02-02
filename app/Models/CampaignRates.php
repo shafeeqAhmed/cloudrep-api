@@ -9,6 +9,7 @@ use App\Models\Campaign;
 use App\Models\User;
 use App\Models\TwillioNumber;
 use App\Models\TargetListing;
+use Illuminate\Support\Str;
 
 class CampaignRates extends Model
 {
@@ -48,9 +49,11 @@ class CampaignRates extends Model
         $client_id = User::getIdByUuid($request->client_uuid) ?? 0;
         $target_id = TargetListing::getIdByUuid($request->target_uuid) ?? 0;
 
+        // return response()->json($target_id);
+
         $rates = CampaignRates::updateOrCreate([
             'campaign_id' => $campaign_id,
-            'target_id ' => $target_id
+            'target_id' => $target_id
         ], [
             'target_id' => $target_id,
             'campaign_id' => $campaign_id,
