@@ -7,6 +7,7 @@ use App\Http\Requests\CampaignRequest;
 use App\Http\Resources\CampaignGeoLocationResource;
 use App\Http\Resources\CampaignResource;
 use App\Http\Resources\IvrNodeFiltersResource;
+use App\Http\Resources\CampaignCustomResource;
 use App\Models\BussinesCategory;
 use App\Models\Campaign;
 use App\Models\Currency;
@@ -988,6 +989,7 @@ class CompaignController extends APiController
             ]);
         }
     }
+
 
 
     public function storeCampaignClient(Request $request)
@@ -2818,5 +2820,41 @@ class CompaignController extends APiController
                 'filters' => IvrNodeFiltersResource::collection($Ivr_builder_filter_conditions)
             ],
         ]);
+    }
+
+
+    public function storeCustomCampaignRates(Request $request)
+    {
+        $request->validate([
+            'campaign_uuid' => 'required|uuid',
+            'user_uuid' => 'required|uuid',
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'phone_no' => 'required|string',
+            'title' => 'required|string',
+            'step' => 'required',
+        ]);
+
+        $user_id = User::getIdByUuid($request->user_uuid);
+
+        $custom_rates = Campaign::where('uuid', $request->campaign_uuid)->first();
+        $custom_rates->user_id = $user_id;
+        $custom_rates->name = $request->name;
+        $custom_rates->email = $request->email;
+        $custom_rates->phone_no = $request->phone_no;
+        $custom_rates->title = $request->title;
+        if ($request->step > $custom_rates->step) {
+            $custom_rates->step = $request->step;
+        }
+        $custom_rates->update();
+        if ($custom_rates) {
+            return $this->respond([
+                'status' => true,
+                'message' => 'Campaign Custom Rates Saved Successfully!',
+                'data' => [
+                    'campaign' => new CampaignCustomResource($custom_rates)
+                ],
+            ]);
+        }
     }
 }

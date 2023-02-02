@@ -341,6 +341,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('store-campaign-name', [CompaignController::class, 'storeCampaignName']);
     Route::post('update-campaign-name', [CompaignController::class, 'updateCampaignName']);
 
+
     //Step 2 (Services)
     Route::post('store-services-against-campaign', [CompaignController::class, 'storeServiceAgainstCampaign']);
     Route::post('update-services-against-campaign', [CompaignController::class, 'updateServiceAgainstCampaign']);
@@ -364,6 +365,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     //Step 8 (Campaign Rates)
     Route::post('store-campaign-rates', [CompaignController::class, 'storeCampaignRates']);
+    Route::post('store-custom-campaign-rates', [CompaignController::class, 'storeCustomCampaignRates']);
 
     //Step 9 (Campaign Images)
     Route::post('store-campaign-images', [CompaignController::class, 'storeCampaignImages']);
