@@ -27,7 +27,7 @@ class DirectCallFarwarding
         $number = $this->getNumber();
 
 
-        $data['action'] = secure_url("/api/our-ivr-action?To=$number&type=directCall");
+        $data['action'] = secure_url("/api/our-ivr-action?To=" . $this->formatNumber() . "&type=directCall");
         $data['record'] = 'record-from-answer-dual';
         $data['timeout'] = 50;
 
