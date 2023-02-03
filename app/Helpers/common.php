@@ -11,7 +11,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use ProtoneMedia\LaravelFFMpeg\Support\FFMpeg;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\DB;
 
 //CONTROLLER
 
@@ -285,6 +285,7 @@ if (!function_exists('countCampaignReportingRecord')) {
             } else if ($role[0] == 'client') {
                 return CampaignReporting::where([['call_status', $status], ['revenue', '!=', '0.00'], ['client_id', $userId]])->whereDate('created_at', $dateTime)->count();
             } else if ($role[0] == 'admin') {
+
                 return CampaignReporting::where([['call_status', $status], ['revenue', '!=', '0.00']])->whereDate('created_at', $dateTime)->count();
             }
         } else {
@@ -986,6 +987,7 @@ if (!function_exists('countDuplicateCallsRecord')) {
                 $query = $query->where([['duplicate', $duplicated]]);
             }
         } else if ($date != null) {
+            $date = Carbon::parse($date)->format('Y-m-d');
             if ($role[0] == 'publisher') {
                 $query = $query->where([['campaign_reportings.created_at', $date], ['duplicate', 1], ['publisher_id', $userId]]);
             } else if ($role[0] == 'client') {
@@ -994,17 +996,20 @@ if (!function_exists('countDuplicateCallsRecord')) {
                 if (!empty($selectedUser)) {
                     $role = $selectedUser->getRoleNames();
                     if ($role[0] == 'client') {
-                        $query = $query->where([['campaign_reportings.created_at', $date], ['duplicate', 1], ['campaign_reportings.client_id', $selectedUser->id]]);
+                        $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['duplicate', 1], ['campaign_reportings.client_id', $selectedUser->id]]);
                     } else if ($role[0] == 'publisher') {
-                        $query = $query->where([['campaign_reportings.created_at', $date], ['duplicate', 1], ['publisher_id', $selectedUser->id]]);
+                        $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['duplicate', 1], ['publisher_id', $selectedUser->id]]);
                     } else if ($role[0] == 'admin') {
-                        $query = $query->where([['campaign_reportings.created_at', $date], ['duplicate', 1]]);
+                        $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['duplicate', 1]]);
                     }
                 }
-                $query = $query->where([['campaign_reportings.created_at', $date], ['duplicate', 1]]);
+
+                $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['duplicate', 1]]);
             }
         }
+
         if ($dateRange != null) {
+
             getTimeRangeRecord($query);
         }
         if ($customFilter != null) {
