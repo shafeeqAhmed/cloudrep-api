@@ -408,22 +408,23 @@ if (!function_exists('countCallStatus')) {
                     $query = $query->where([['duplicate', $duplicated], ['call_status', $status], ['revenue', '0.00']]);
                 }
             } else if ($date !== null) {
+                $date = Carbon::parse($date)->format('Y-m-d');
                 if ($role[0] == 'publisher') {
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['revenue', '0.00'], ['publisher_id', $userId]]);
+                    $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['revenue', '0.00'], ['publisher_id', $userId]]);
                 } else if ($role[0] == 'client') {
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['revenue', '0.00'], ['campaign_reportings.client_id', $userId]]);
+                    $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['revenue', '0.00'], ['campaign_reportings.client_id', $userId]]);
                 } else if ($role[0] == 'admin') {
                     if (!empty($selectedUser)) {
                         $role = $selectedUser->getRoleNames();
                         if ($role[0] == 'client') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['revenue', '0.00'], ['campaign_reportings.client_id', $selectedUser->id]]);
+                            $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['revenue', '0.00'], ['campaign_reportings.client_id', $selectedUser->id]]);
                         } else if ($role[0] == 'publisher') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['revenue', '0.00'], ['publisher_id', $selectedUser->id]]);
+                            $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['revenue', '0.00'], ['publisher_id', $selectedUser->id]]);
                         } else if ($role[0] == 'admin') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['revenue', '0.00']]);
+                            $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['revenue', '0.00']]);
                         }
                     }
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['revenue', '0.00']]);
+                    $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['revenue', '0.00']]);
                 }
             }
         } else if ($status == 'converted') {
@@ -528,22 +529,31 @@ if (!function_exists('countCallStatus')) {
                     $query = $query->where([['duplicate', $duplicated], ['call_status', 'completed'], ['revenue', '!=', '0.00']]);
                 }
             } else if ($date !== null) {
+                $date = Carbon::parse($date)->format('Y-m-d');
                 if ($role[0] == 'publisher') {
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', 'completed'], ['revenue', '!=', '0.00'], ['publisher_id', $userId]]);
+                    $query = $query->where([
+                        [DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', 'completed'], ['revenue', '!=', '0.00'], ['publisher_id', $userId]
+                    ]);
                 } else if ($role[0] == 'client') {
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', 'completed'], ['revenue', '!=', '0.00'], ['campaign_reportings.client_id', $userId]]);
+                    $query = $query->where([
+                        [DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', 'completed'], ['revenue', '!=', '0.00'], ['campaign_reportings.client_id', $userId]
+                    ]);
                 } else if ($role[0] == 'admin') {
                     if (!empty($selectedUser)) {
                         $role = $selectedUser->getRoleNames();
                         if ($role[0] == 'client') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', 'completed'], ['revenue', '!=', '0.00'], ['campaign_reportings.client_id', $selectedUser->id]]);
+                            $query = $query->where([
+                                [DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', 'completed'], ['revenue', '!=', '0.00'], ['campaign_reportings.client_id', $selectedUser->id]
+                            ]);
                         } else if ($role[0] == 'publisher') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', 'completed'], ['revenue', '!=', '0.00'], ['publisher_id', $selectedUser->id]]);
+                            $query = $query->where([
+                                [DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', 'completed'], ['revenue', '!=', '0.00'], ['publisher_id', $selectedUser->id]
+                            ]);
                         } else if ($role[0] == 'admin') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', 'completed'], ['revenue', '!=', '0.00']]);
+                            $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', 'completed'], ['revenue', '!=', '0.00']]);
                         }
                     }
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', 'completed'], ['revenue', '!=', '0.00']]);
+                    $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', 'completed'], ['revenue', '!=', '0.00']]);
                 }
             }
         } else {
@@ -648,22 +658,23 @@ if (!function_exists('countCallStatus')) {
                     $query = $query->where([['duplicate', $duplicated], ['call_status', $status]]);
                 }
             } else if ($date !== null) {
+                $date = Carbon::parse($date)->format('Y-m-d');
                 if ($role[0] == 'publisher') {
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['publisher_id', $userId]]);
+                    $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['publisher_id', $userId]]);
                 } else if ($role[0] == 'client') {
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['campaign_reportings.client_id', $userId]]);
+                    $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['campaign_reportings.client_id', $userId]]);
                 } else if ($role[0] == 'admin') {
                     if (!empty($selectedUser)) {
                         $role = $selectedUser->getRoleNames();
                         if ($role[0] == 'client') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['campaign_reportings.client_id', $selectedUser->id]]);
+                            $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['campaign_reportings.client_id', $selectedUser->id]]);
                         } else if ($role[0] == 'publisher') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status], ['publisher_id', $selectedUser->id]]);
+                            $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status], ['publisher_id', $selectedUser->id]]);
                         } else if ($role[0] == 'admin') {
-                            $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status]]);
+                            $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status]]);
                         }
                     }
-                    $query = $query->where([['campaign_reportings.created_at', $date], ['call_status', $status]]);
+                    $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['call_status', $status]]);
                 }
             }
         }
@@ -984,14 +995,15 @@ if (!function_exists('countDuplicateCallsRecord')) {
                         $query = $query->where([['duplicate', $duplicated]]);
                     }
                 }
+
                 $query = $query->where([['duplicate', $duplicated]]);
             }
         } else if ($date != null) {
             $date = Carbon::parse($date)->format('Y-m-d');
             if ($role[0] == 'publisher') {
-                $query = $query->where([['campaign_reportings.created_at', $date], ['duplicate', 1], ['publisher_id', $userId]]);
+                $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['duplicate', 1], ['publisher_id', $userId]]);
             } else if ($role[0] == 'client') {
-                $query = $query->where([['campaign_reportings.created_at', $date], ['duplicate', 1], ['campaign_reportings.client_id', $userId]]);
+                $query = $query->where([[DB::raw("DATE(campaign_reportings.created_at)"), $date], ['duplicate', 1], ['campaign_reportings.client_id', $userId]]);
             } else if ($role[0] == 'admin') {
                 if (!empty($selectedUser)) {
                     $role = $selectedUser->getRoleNames();
